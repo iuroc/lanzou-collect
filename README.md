@@ -8,3 +8,12 @@
 ## 采集结果
 
 - 我们有采集完成的文件，你可以[在此页面下载](https://github.com/oyps/lanzou-collect/releases)
+
+## 打包与使用
+
+1. 运行下面的命令，将程序打包成 EXE
+    ```bash
+    pyinstaller -F 采集文件列表.py
+    ```
+2. 将数据源文件夹放到 EXE 所在目录
+3. 双击运行 EXE 程序
