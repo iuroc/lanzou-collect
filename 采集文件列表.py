@@ -160,3 +160,4 @@ class Get_list:
 
 if __name__ == '__main__':
     Get_list().start()
+input()
