@@ -4,6 +4,7 @@ import threading
 import re
 import time
 import datetime
+import zipfile
 from 校验数据源 import Check
 
 
@@ -35,13 +36,18 @@ class Get_list:
             threads.append(thread)
         for i in threads:
             i.join()
-        filename = '采集结果/' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + '.json'
+        filename = '采集结果/' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        json_filename = filename = '.json'
         json.dump(
             self.result,
             open(filename, 'w', encoding='utf-8'),
             ensure_ascii=False,
             indent=4,
         )
+        zip_filename = filename + '.zip'
+        zip_file = zipfile.ZipFile(zip_filename, 'w')
+        zip_file.write(json_filename, compress_type=zipfile.ZIP_DEFLATED)
+        zip_file.close()
 
     def get_list(self, url: str, password: str):
         def get_page(config: dict):
