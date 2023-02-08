@@ -3,6 +3,7 @@ import json
 import threading
 import re
 import time
+import datetime
 from 校验数据源 import Check
 
 
@@ -34,7 +35,7 @@ class Get_list:
             threads.append(thread)
         for i in threads:
             i.join()
-        filename = '采集结果/' + str(int(time.time())) + '.json'
+        filename = '采集结果/' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + '.json'
         json.dump(
             self.result,
             open(filename, 'w', encoding='utf-8'),
