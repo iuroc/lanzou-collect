@@ -34,7 +34,6 @@ class Get_list:
             thread = threading.Thread(target=self.get_list, args=(url, password))
             thread.start()
             threads.append(thread)
-            break
         for i in threads:
             i.join()
         filename = '采集结果/' + datetime.datetime.now().strftime("%Y_%m_%d %H_%M_%S")
