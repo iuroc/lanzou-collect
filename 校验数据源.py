@@ -38,7 +38,8 @@ class Check:
             threads.append(thread)
         for i in threads:
             i.join()
-        self.result = list(set(self.result))
+        self.result = sorted(list(set(self.result)))
+        self.error = sorted(list(set(self.error)))
         open('数据源/校验成功数据源.txt', 'w', encoding='utf-8').write('\n'.join(self.result))
         open('数据源/校验失败数据源.txt', 'w', encoding='utf-8').write('\n'.join(self.error))
         print('\r成功 %d 个，失败 %d 个' % (len(self.result), len(self.error)))
