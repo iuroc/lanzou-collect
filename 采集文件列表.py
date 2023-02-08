@@ -61,6 +61,7 @@ class Get_list:
                 return get_page(config)
             if type(data) is not list:
                 return None
+            self.lock.acquire()
             for i in data:
                 m = re.match(r'^(\d+)\s*天前', i['time'])
                 if m:
@@ -81,9 +82,8 @@ class Get_list:
                     i['time'] = time.strftime(
                         '%Y-%m-%d', time.localtime(time.time() - day * 24 * 60 * 60)
                     )
-                self.lock.acquire()
                 self.result.append(i)
-                self.lock.release()
+            self.lock.release()
             return True
 
         config: dict = self.get_config(url, password)
@@ -98,31 +98,36 @@ class Get_list:
             if not get_page(config):
                 # 到底了，翻页结束
                 break
+            self.lock.acquire()
+            print('P' + str(page) + '\t' + url)
+            self.lock.release()
             time.sleep(1)
         title = config['title']
         self.lock.acquire()
-        print(title + ' - 采集完成')
+        print('OK\t' + title + ' - 采集完成')
         self.lock.release()
         self.sem.release()
 
     def get_config(self, url: str, password: str) -> dict:
         '''获取配置信息'''
-        r = requests.get(
-            url, headers={'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
-        )
-        r.encoding = 'utf-8'
-        html = r.text
-        if not html:
-            # 远程内容为空，重试
+        try:
+            r = requests.get(
+                url, headers={'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
+            )
+            r.encoding = 'utf-8'
+            html = r.text
+            if not html:
+                # 远程内容为空，重试
+                return self.get_config(url, password)
+        except:
+            # 请求失败，重试
             return self.get_config(url, password)
-        elif html.find('filemoreajax') == -1:
+        if html.find('filemoreajax') == -1:
             # 未找到配置信息
             return None
         folds = re.findall(r'<div class="mbx mbxfolder">.*?<a href="(.*?)"', html)
         for fold in folds:
-            threading.Thread(
-                target=self.get_list, args=('https://www.lanzoui.com' + fold, password)
-            ).start()
+            self.get_list('https://www.lanzoui.com' + fold, password)
         title = re.findall(r'<title>(.*?)</title>', html)[0]
         uid = re.search(r'\'uid\'\s*:\s*\'(.*?)\'', html)
         uid = uid.group(1) if uid else ''
