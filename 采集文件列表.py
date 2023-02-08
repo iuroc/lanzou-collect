@@ -40,10 +40,7 @@ class Get_list:
         filename = '采集结果/' + datetime.datetime.now().strftime("%Y_%m_%d %H_%M_%S")
         json_filename = filename + '.json'
         json.dump(
-            self.result,
-            open(json_filename, 'w', encoding='utf-8'),
-            ensure_ascii=False,
-            indent=4,
+            self.result, open(json_filename, 'w', encoding='utf-8'), ensure_ascii=False
         )
         zip_filename = filename + '.zip'
         zip_file = zipfile.ZipFile(zip_filename, 'w')
