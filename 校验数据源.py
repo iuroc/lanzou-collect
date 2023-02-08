@@ -1,5 +1,6 @@
 import requests
 import threading
+import os
 
 
 class Check:
@@ -25,9 +26,10 @@ class Check:
         self.line_list = text.split('\n')
         self.finish_count = 0
         self.all_count = len(self.line_list)
-        self.start()
 
     def start(self):
+        if not os.path.exists('采集结果'):
+            os.mkdir('采集结果')
         threads = []
         for i in self.line_list:
             self.sem.acquire()
@@ -68,4 +70,5 @@ class Check:
         self.sem.release()
 
 
-Check()
+if __name__ == '__main__':
+    Check().start()
