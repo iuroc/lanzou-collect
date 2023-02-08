@@ -19,12 +19,12 @@ class Get_list:
     def __init__(self):
         self.lock = threading.Lock()
         self.sem = threading.Semaphore(50)
-        text = text = open('数据源/校验成功数据源.txt', 'r').read()
-        self.line_list = text.split('\n')
         self.result = []
 
     def start(self):
         Check().start()
+        text = text = open('数据源/校验成功数据源.txt', 'r').read()
+        self.line_list = text.split('\n')
         threads = []
         for line in self.line_list:
             li = line.split('|')
