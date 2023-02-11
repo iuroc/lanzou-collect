@@ -75,7 +75,7 @@ class Check_url:
         try:
             text = open(Config.source_path, 'r', encoding='utf-8').read()
         except:
-            print('source.txt 读取失败')
+            print(Config.source_path + ' 读取失败')
             return
         data = text.split('\n')
         source = []
