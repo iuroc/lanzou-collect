@@ -165,4 +165,4 @@ class Get_list:
 
 if __name__ == '__main__':
     Get_list().start()
-input()
+input('采集完成，您可以关闭程序')
